@@ -35,7 +35,7 @@ def extract_paragraphs_from_pdfs(uploaded_files):
     return paragraphs
 
 def build_faiss_index(paragraphs):
-    model = load_sentence_transformer()
+    model = SentenceTransformer('all-MiniLM-L6-v2')
     embeddings = model.encode(paragraphs, show_progress_bar=False)
     normed = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
     index = faiss.IndexFlatIP(normed.shape[1])
