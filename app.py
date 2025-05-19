@@ -29,47 +29,47 @@ def load_sentence_transformer():
 
 def extract_paragraphs_from_pdfs(pdf_files):
     paragraphs = []
-    pdf_file = pdf_files[0]
-    doc = fitz.open(pdf_file)
+    for pdf_file in pdf_files:
+        doc = fitz.open(pdf_file)
 
-    for page in doc:  # Loop through pages
-        blocks = page.get_text("dict")["blocks"]  # Extract blocks
+        for page in doc:  # Loop through pages
+            blocks = page.get_text("dict")["blocks"]  # Extract blocks
 
-        temp_paragraph = ""
-        last_block_bottom = None  # Track the bottom of the last processed block
+            temp_paragraph = ""
+            last_block_bottom = None  # Track the bottom of the last processed block
 
-        for block in blocks:  # Loop through blocks
-            if "lines" in block:  # Only process text blocks
+            for block in blocks:  # Loop through blocks
+                if "lines" in block:  # Only process text blocks
                 # Get the bounding box of the block
-                _, block_y0, _, block_y1 = block["bbox"]
+                    _, block_y0, _, block_y1 = block["bbox"]
 
                 # Extract text from the block
-                block_text = " ".join(
-                    [
-                        " ".join(span["text"] for span in line["spans"])
-                        for line in block["lines"]
-                    ]
-                ).strip()
+                    block_text = " ".join(
+                        [
+                            " ".join(span["text"] for span in line["spans"])
+                            for line in block["lines"]
+                        ]
+                    ).strip()
 
                 # If there's a previous block, check the gap between blocks
-                if last_block_bottom is not None and (block_y0 - last_block_bottom) > 15:
+                    if last_block_bottom is not None and (block_y0 - last_block_bottom) > 15:
                     # If gap is large, finalize the current paragraph
-                    if temp_paragraph.strip():
-                        if len(temp_paragraph.split()) >= 10:  # Keep only paragraphs with 10+ words
-                            paragraphs.append(temp_paragraph.strip())
-                    temp_paragraph = block_text  # Start a new paragraph
-                else:
+                        if temp_paragraph.strip():
+                            if len(temp_paragraph.split()) >= 10:  # Keep only paragraphs with 10+ words
+                                paragraphs.append(temp_paragraph.strip())
+                        temp_paragraph = block_text  # Start a new paragraph
+                    else:
                     # Otherwise, continue the current paragraph
-                    temp_paragraph += " " + block_text
+                        temp_paragraph += " " + block_text
 
                 # Update the bottom coordinate of the last block
-                last_block_bottom = block_y1
+                    last_block_bottom = block_y1
 
         # Add the last paragraph if it meets the word threshold
-        if temp_paragraph.strip() and len(temp_paragraph.split()) >= 10:
-            paragraphs.append(temp_paragraph.strip())
+            if temp_paragraph.strip() and len(temp_paragraph.split()) >= 10:
+                paragraphs.append(temp_paragraph.strip())
 
-    doc.close()
+        doc.close()
     return paragraphs
 
 def build_faiss_index(paragraphs):
