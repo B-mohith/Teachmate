@@ -30,7 +30,8 @@ def load_sentence_transformer():
 def extract_paragraphs_from_pdfs(pdf_files):
     paragraphs = []
     for pdf_file in pdf_files:
-        doc = fitz.open(pdf_file)
+        pdf_bytes = pdf_file.read()
+        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
 
         for page in doc:  # Loop through pages
             blocks = page.get_text("dict")["blocks"]  # Extract blocks
