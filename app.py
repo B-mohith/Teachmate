@@ -27,7 +27,7 @@ def load_sentence_transformer():
 # -------------------------
  # PyMuPDF
 
-def extract_paragraphs_with_blocks(pdf_file):
+def extract_paragraphs_from_pdfs(pdf_file):
     paragraphs = []
     doc = fitz.open(pdf_file)
 
