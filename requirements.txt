@@ -1,0 +1,15 @@
+sentence-transformers
+PyPDF2
+language-tool-python
+nltk
+PyMuPDF
+pinecone-client
+langchain
+langchain-community
+langchain_openai
+openai
+faiss-gpu
+streamlit
+python-dotenv
+huggingface_hub
+together
