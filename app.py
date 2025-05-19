@@ -1,4 +1,4 @@
-%%writefile app.py
+
 import streamlit as st
 from together import Together
 from sentence_transformers import SentenceTransformer
